@@ -1,26 +1,18 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <link rel="manifest" href="manifest.json">
-<script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js');
-    }
-</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" 
-      <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الموسوعة التعليمية للفحوصات والأجهزة الطبية</title>
+    
+    <!-- ربط ملفات PWA -->
     <link rel="manifest" href="manifest.json">
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js');
         }
     </script>
-    <title>الموسوعة التعليمية للفحوصات والأجهزة الطبية</title>
-    <!-- باقي الكود -->content="width=device-width, initial-scale=1.0">
-    <title>الموسوعة التعليمية للفحوصات والأجهزة الطبية</title>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com">
     </script>
@@ -101,7 +93,6 @@
             transform: translateY(-2px);
         }
 
-        /* تحسين شكل الجدول */
         .normal-range-table td {
             padding: 4px 8px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -125,7 +116,6 @@
                 </div>
             </div>
 
-            <!-- Global Actions & Tools -->
             <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
                 <button onclick="openCustomizationModal()" class="px-3 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl text-xs font-bold transition flex items-center gap-2">
                     <i class="fa-solid fa-sliders text-primary-custom"></i>
@@ -141,7 +131,7 @@
                 </button>
             </div>
         </header>
-            <!-- Main Content Area -->
+    <!-- Main Content Area -->
     <main class="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <!-- Sidebar Navigation -->
         <div class="lg:col-span-1 space-y-4">
@@ -151,9 +141,7 @@
                     بحث وتصفية الفحوصات
                 </h2>
                 <input type="text" id="globalSearchInput" oninput="renderTests()" placeholder="ابحث باسم الفحص أو الشرح..." class="w-full px-3 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent text-xs focus:ring-2 focus:ring-primary-custom outline-none">
-
                 <hr class="dark:border-gray-700">
-
                 <h3 class="font-bold text-xs text-gray-500 dark:text-gray-400">الأقسام المخبرية</h3>
                 <div id="categoriesList" class="space-y-1"></div>
             </div>
@@ -167,12 +155,11 @@
                     <i class="fa-solid fa-plus"></i> إضافة فحص جديد
                 </button>
             </div>
-
             <div id="testsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
     </main>
-    </div>
-    <!-- Add / Edit Test Modal -->
+</div>
+<!-- ====== Add / Edit Test Modal ====== -->
 <div id="addTestModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 md:p-4">
     <div class="bg-card w-full max-w-2xl rounded-2xl p-4 md:p-6 space-y-4 shadow-2xl border border-gray-200 dark:border-gray-800 max-h-[92vh] overflow-y-auto">
         <div class="flex items-center justify-between border-b pb-3 dark:border-gray-700">
@@ -241,7 +228,8 @@
         </form>
     </div>
 </div>
-<!-- Modal: Test Details & Content Viewer -->
+
+<!-- ====== Test Details Modal ====== -->
 <div id="testDetailModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 md:p-4">
     <div class="bg-card w-full max-w-3xl rounded-2xl p-4 md:p-6 space-y-4 shadow-2xl border border-gray-200 dark:border-gray-800 max-h-[92vh] flex flex-col">
         <div class="flex items-center justify-between border-b pb-3 dark:border-gray-700">
@@ -249,7 +237,6 @@
             <button onclick="closeTestDetailModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
 
-        <!-- Content Options Bar -->
         <div class="flex flex-wrap gap-2 border-b pb-3 dark:border-gray-700 text-xs">
             <button onclick="switchDetailTab('info')" id="tabBtnInfo" class="px-3 py-1.5 rounded-xl font-bold bg-primary-custom text-white flex items-center gap-1.5">
                 <i class="fa-solid fa-circle-info"></i> معلومات الفحص
@@ -268,12 +255,11 @@
             </button>
         </div>
 
-        <!-- Dynamic Tab Content Body -->
         <div id="modalDetailBody" class="flex-1 overflow-y-auto space-y-4 text-xs pr-1"></div>
     </div>
 </div>
 
-<!-- Modal: Devices Guide -->
+<!-- ====== Devices Modal ====== -->
 <div id="devicesModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-card w-full max-w-2xl rounded-2xl p-6 space-y-4 shadow-2xl border border-gray-200 dark:border-gray-800 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between border-b pb-3 dark:border-gray-700">
@@ -297,7 +283,7 @@
     </div>
 </div>
 
-<!-- Customization Settings Modal -->
+<!-- ====== Customization Modal ====== -->
 <div id="customizationModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-card w-full max-w-md rounded-2xl p-6 space-y-4 shadow-2xl border border-gray-200 dark:border-gray-800">
         <div class="flex items-center justify-between border-b pb-3 dark:border-gray-700">
@@ -343,6 +329,8 @@
         </div>
     </div>
 </div>
+
+<!-- ====== JavaScript (الجزء الأول) ====== -->
 <script>
     const categories = [
         { id: 'all', name: 'جميع الفحوصات', icon: 'fa-list' },
@@ -447,7 +435,6 @@
             const card = document.createElement('div');
             card.className = 'test-card-item rounded-2xl p-4 space-y-3 flex flex-col justify-between';
 
-            // تحويل النص إلى جدول
             let normalHtml = t.normalValue;
             if (t.normalValue && t.normalValue.includes('|')) {
                 const rows = t.normalValue.split('|').map(r => r.trim()).filter(r => r);
@@ -480,6 +467,7 @@
             grid.appendChild(card);
         });
     }
+
     // Handle Files: Video & PDF Data URL
     function handleVideoFileUpload(e) {
         const file = e.target.files[0];
@@ -494,249 +482,250 @@
     }
 
     function handlePdfFileUpload(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                document.getElementById('pdfDataUrlStore').value = evt.target.result;
-                document.getElementById('pdfUploadStatus').innerHTML = '✅ تم رفع ملف PDF بنجاح';
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    document.getElementById('pdfDataUrlStore').value = evt.target.result;
+                    document.getElementById('pdfUploadStatus').innerHTML = '✅ تم رفع ملف PDF بنجاح';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // OCR Extractor
+        async function extractPdfTextFromForm() {
+            const fileInput = document.getElementById('testPdfFileInput');
+            const status = document.getElementById('pdfFormStatus');
+            const outputArea = document.getElementById('extractedPdfTextStore');
+
+            if (!fileInput.files[0]) {
+                alert('يرجى اختيار ملف PDF أولاً');
+                return;
+            }
+
+            status.innerText = 'جاري قراءة واستخراج ملف PDF...';
+            outputArea.value = '';
+
+            try {
+                const file = fileInput.files[0];
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                let fullText = '';
+                const maxPages = Math.min(pdf.numPages, 10);
+
+                for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
+                    status.innerText = `قراءة الصفحة (${pageNum} من ${maxPages})...`;
+                    const page = await pdf.getPage(pageNum);
+                    const textContent = await page.getTextContent();
+                    let pageText = textContent.items.map(item => item.str).join(' ');
+
+                    if (pageText.trim().length < 10) {
+                        status.innerText = `مسح الصورة ضوئياً (OCR) للصفحة ${pageNum}...`;
+                        const viewport = page.getViewport({ scale: 1.0 });
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+
+                        await page.render({ canvasContext: ctx, viewport }).promise;
+                        const imageData = canvas.toDataURL('image/png');
+                        const ocrResult = await Tesseract.recognize(imageData, 'eng+ara');
+                        pageText = ocrResult.data.text;
+                    }
+
+                    fullText += `--- [صفحة ${pageNum}] ---\n` + pageText + '\n\n';
+                    outputArea.value = fullText;
+                }
+
+                status.innerText = `تم تحويل النص بنجاح (${maxPages} صفحات)!`;
+            } catch (err) {
+                console.error(err);
+                status.innerText = 'حدث خطأ أثناء قراءة الملف.';
+            }
+        }
+
+        function handleSaveTest(e) {
+            e.preventDefault();
+            const editId = document.getElementById('editTestId').value;
+            const name = document.getElementById('testNameInput').value;
+            const category = document.getElementById('testCategorySelect').value;
+            const normalValue = document.getElementById('testNormalInput').value;
+            const description = document.getElementById('testDescriptionInput').value;
+            const videoLinks = document.getElementById('testVideoLinksInput').value.split('\n').filter(u => u.trim() !== '');
+            const uploadedVideo = document.getElementById('uploadedVideoDataUrl').value;
+            const pdfDataUrl = document.getElementById('pdfDataUrlStore').value;
+            const pdfText = document.getElementById('extractedPdfTextStore').value;
+
+            const testObj = {
+                id: editId || Date.now().toString(),
+                name,
+                category,
+                normalValue,
+                description,
+                videoLinks,
+                uploadedVideo,
+                pdfDataUrl,
+                pdfText
             };
-            reader.readAsDataURL(file);
-        }
-    }
 
-    // OCR Extractor
-    async function extractPdfTextFromForm() {
-        const fileInput = document.getElementById('testPdfFileInput');
-        const status = document.getElementById('pdfFormStatus');
-        const outputArea = document.getElementById('extractedPdfTextStore');
-
-        if (!fileInput.files[0]) {
-            alert('يرجى اختيار ملف PDF أولاً');
-            return;
-        }
-
-        status.innerText = 'جاري قراءة واستخراج ملف PDF...';
-        outputArea.value = '';
-
-        try {
-            const file = fileInput.files[0];
-            const arrayBuffer = await file.arrayBuffer();
-            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-            let fullText = '';
-            const maxPages = Math.min(pdf.numPages, 10);
-
-            for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
-                status.innerText = `قراءة الصفحة (${pageNum} من ${maxPages})...`;
-                const page = await pdf.getPage(pageNum);
-                const textContent = await page.getTextContent();
-                let pageText = textContent.items.map(item => item.str).join(' ');
-
-                if (pageText.trim().length < 10) {
-                    status.innerText = `مسح الصورة ضوئياً (OCR) للصفحة ${pageNum}...`;
-                    const viewport = page.getViewport({ scale: 1.0 });
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-
-                    await page.render({ canvasContext: ctx, viewport }).promise;
-                    const imageData = canvas.toDataURL('image/png');
-                    const ocrResult = await Tesseract.recognize(imageData, 'eng+ara');
-                    pageText = ocrResult.data.text;
-                }
-
-                fullText += `--- [صفحة ${pageNum}] ---\n` + pageText + '\n\n';
-                outputArea.value = fullText;
+            if (editId) {
+                const idx = tests.findIndex(t => t.id === editId);
+                if (idx !== -1) tests[idx] = testObj;
+            } else {
+                tests.unshift(testObj);
             }
 
-            status.innerText = `تم تحويل النص بنجاح (${maxPages} صفحات)!`;
-        } catch (err) {
-            console.error(err);
-            status.innerText = 'حدث خطأ أثناء قراءة الملف.';
-        }
-    }
-
-    function handleSaveTest(e) {
-        e.preventDefault();
-        const editId = document.getElementById('editTestId').value;
-        const name = document.getElementById('testNameInput').value;
-        const category = document.getElementById('testCategorySelect').value;
-        const normalValue = document.getElementById('testNormalInput').value;
-        const description = document.getElementById('testDescriptionInput').value;
-        const videoLinks = document.getElementById('testVideoLinksInput').value.split('\n').filter(u => u.trim() !== '');
-        const uploadedVideo = document.getElementById('uploadedVideoDataUrl').value;
-        const pdfDataUrl = document.getElementById('pdfDataUrlStore').value;
-        const pdfText = document.getElementById('extractedPdfTextStore').value;
-
-        const testObj = {
-            id: editId || Date.now().toString(),
-            name,
-            category,
-            normalValue,
-            description,
-            videoLinks,
-            uploadedVideo,
-            pdfDataUrl,
-            pdfText
-        };
-
-        if (editId) {
-            const idx = tests.findIndex(t => t.id === editId);
-            if (idx !== -1) tests[idx] = testObj;
-        } else {
-            tests.unshift(testObj);
-        }
-
-        localStorage.setItem('edu_tests_master', JSON.stringify(tests));
-        renderTests();
-        closeAddTestModal();
-    }
-
-    function openAddTestModal() {
-        document.getElementById('editTestId').value = '';
-        document.getElementById('testNameInput').value = '';
-        document.getElementById('testNormalInput').value = '';
-        document.getElementById('testDescriptionInput').value = '';
-        document.getElementById('testVideoLinksInput').value = '';
-        document.getElementById('uploadedVideoDataUrl').value = '';
-        document.getElementById('pdfDataUrlStore').value = '';
-        document.getElementById('extractedPdfTextStore').value = '';
-        document.getElementById('videoUploadStatus').innerHTML = '';
-        document.getElementById('pdfUploadStatus').innerHTML = '';
-        document.getElementById('addTestModal').classList.remove('hidden');
-    }
-
-    function openEditTestModal(id) {
-        const t = tests.find(item => item.id === id);
-        if (!t) return;
-
-        document.getElementById('editTestId').value = t.id;
-        document.getElementById('testNameInput').value = t.name;
-        document.getElementById('testCategorySelect').value = t.category;
-        document.getElementById('testNormalInput').value = t.normalValue;
-        document.getElementById('testDescriptionInput').value = t.description;
-        document.getElementById('testVideoLinksInput').value = (t.videoLinks || []).join('\n');
-        document.getElementById('uploadedVideoDataUrl').value = t.uploadedVideo || '';
-        document.getElementById('pdfDataUrlStore').value = t.pdfDataUrl || '';
-        document.getElementById('extractedPdfTextStore').value = t.pdfText || '';
-
-        if (t.uploadedVideo) document.getElementById('videoUploadStatus').innerHTML = '✅ يوجد فيديو مرفق مسبقاً';
-        if (t.pdfDataUrl) document.getElementById('pdfUploadStatus').innerHTML = '✅ يوجد PDF مرفق مسبقاً';
-
-        document.getElementById('addTestModal').classList.remove('hidden');
-    }        function openTestDetail(id) {
-            activeTestForDetail = tests.find(item => item.id === id);
-            if (!activeTestForDetail) return;
-
-            document.getElementById('modalDetailTitle').innerText = activeTestForDetail.name;
-            switchDetailTab('info');
-            document.getElementById('testDetailModal').classList.remove('hidden');
-        }
-
-        function switchDetailTab(tabName) {
-            const body = document.getElementById('modalDetailBody');
-            const btns = ['Info', 'PdfOriginal', 'PdfText', 'VideoPlay', 'VideoLinks'];
-
-            btns.forEach(b => {
-                const el = document.getElementById(`tabBtn${b}`);
-                if (el) {
-                    el.classList.remove('bg-primary-custom', 'text-white');
-                    el.classList.add('bg-gray-100', 'dark:bg-gray-800');
-                }
-            });
-
-            const activeBtn = document.getElementById(`tabBtn${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('bg-gray-100', 'dark:bg-gray-800');
-                activeBtn.classList.add('bg-primary-custom', 'text-white');
-            }
-
-            const t = activeTestForDetail;
-            if (tabName === 'info') {
-                let normalHtml = t.normalValue;
-                if (t.normalValue && t.normalValue.includes('|')) {
-                    const rows = t.normalValue.split('|').map(r => r.trim()).filter(r => r);
-                    normalHtml = `<table class="normal-range-table w-full text-xs">
-                                    ${rows.map(r => `<tr><td class="font-bold text-primary-custom pl-2 py-1">${r.split(':')[0]?.trim() || ''}</td><td class="py-1">${r.split(':').slice(1).join(':')?.trim() || r}</td></tr>`).join('')}
-                                </table>`;
-                }
-                body.innerHTML = `
-                            <div class="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-xl border border-blue-200 dark:border-blue-900">
-                                <span class="font-bold text-primary-custom block mb-1">القيم الطبيعية المرجعية:</span>
-                                ${normalHtml}
-                            </div>
-                            <div>
-                                <h4 class="font-bold mb-1">الشرح النظري وطريقة الإجراء:</h4>
-                                <p class="leading-relaxed text-gray-600 dark:text-gray-300 leading-6">${t.description}</p>
-                            </div>
-                        `;
-            } else if (tabName === 'pdfOriginal') {
-                body.innerHTML = t.pdfDataUrl ?
-                    `<iframe src="${t.pdfDataUrl}" class="w-full h-96 rounded-xl border"></iframe>` :
-                    `<div class="text-center py-8 text-gray-400">لا يوجد ملف PDF أصلي مرفق لهذا الفحص</div>`;
-            } else if (tabName === 'pdfText') {
-                body.innerHTML = t.pdfText ?
-                    `<div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-xl font-mono text-[11px] whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">${t.pdfText}</div>` :
-                    `<div class="text-center py-8 text-gray-400">لا يوجد نص محول مستخرج من PDF</div>`;
-            } else if (tabName === 'videoPlay') {
-                body.innerHTML = t.uploadedVideo ?
-                    `<video controls class="w-full rounded-xl max-h-80"><source src="${t.uploadedVideo}"></video>` :
-                    `<div class="text-center py-8 text-gray-400">لا يوجد فيديو محمل مباشرة من الجهاز</div>`;
-            } else if (tabName === 'videoLinks') {
-                body.innerHTML = (t.videoLinks && t.videoLinks.length) ?
-                    `<div class="space-y-2">${t.videoLinks.map(v => `<a href="${v}" target="_blank" class="block p-2 bg-gray-50 dark:bg-gray-800 rounded-lg text-blue-500 hover:underline truncate"><i class="fa-brands fa-youtube text-red-600 ml-2"></i>${v}</a>`).join('')}</div>` :
-                    `<div class="text-center py-8 text-gray-400">لا توجد روابط فيديوهات تعليمية خارجية</div>`;
-            }
-        }
-
-        function deleteTest(id) {
-            if (!confirm('تأكيد حذف الفحص؟')) return;
-            tests = tests.filter(t => t.id !== id);
             localStorage.setItem('edu_tests_master', JSON.stringify(tests));
             renderTests();
+            closeAddTestModal();
         }
 
-        // Devices Functions
-        function handleAddDevice(e) {
-            e.preventDefault();
-            const name = document.getElementById('devName').value;
-            const category = document.getElementById('devCategory').value;
-            const video = document.getElementById('devVideo').value;
-
-            devices.push({ id: Date.now(), name, category, video });
-            localStorage.setItem('edu_lab_devices', JSON.stringify(devices));
-            renderDevices();
-            e.target.reset();
+        function openAddTestModal() {
+            document.getElementById('editTestId').value = '';
+            document.getElementById('testNameInput').value = '';
+            document.getElementById('testNormalInput').value = '';
+            document.getElementById('testDescriptionInput').value = '';
+            document.getElementById('testVideoLinksInput').value = '';
+            document.getElementById('uploadedVideoDataUrl').value = '';
+            document.getElementById('pdfDataUrlStore').value = '';
+            document.getElementById('extractedPdfTextStore').value = '';
+            document.getElementById('videoUploadStatus').innerHTML = '';
+            document.getElementById('pdfUploadStatus').innerHTML = '';
+            document.getElementById('addTestModal').classList.remove('hidden');
         }
 
-        function renderDevices() {
-            const container = document.getElementById('devicesListContainer');
-            container.innerHTML = '';
-            devices.forEach(d => {
-                const div = document.createElement('div');
-                div.className = 'p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl flex justify-between items-center text-xs border border-gray-200 dark:border-gray-700';
-                div.innerHTML = `
-                            <div>
-                                <span class="font-bold text-indigo-600 dark:text-indigo-400 block">${d.name}</span>
-                                <span class="text-[10px] text-gray-400">${d.category}</span>
-                            </div>
-                            ${d.video ? `<a href="${d.video}" target="_blank" class="text-red-500 font-bold"><i class="fa-brands fa-youtube text-sm"></i></a>` : ''}
-                        `;
-                container.appendChild(div);
-            });
-        }
+        function openEditTestModal(id) {
+            const t = tests.find(item => item.id === id);
+            if (!t) return;
 
-        function closeAddTestModal() { document.getElementById('addTestModal').classList.add('hidden'); }
-        function closeTestDetailModal() { document.getElementById('testDetailModal').classList.add('hidden'); }
-        function openCustomizationModal() { document.getElementById('customizationModal').classList.remove('hidden'); }
-        function closeCustomizationModal() { document.getElementById('customizationModal').classList.add('hidden'); }
-        function openDevicesModal() { document.getElementById('devicesModal').classList.remove('hidden'); }
-        function closeDevicesModal() { document.getElementById('devicesModal').classList.add('hidden'); }
-        function changeFontSize(s) { document.documentElement.style.setProperty('--app-font-size', `${s}px`); }
-        function changeFontFamily(f) { document.documentElement.style.setProperty('--app-font-family', f); }
-        function changePrimaryColor(c) { document.documentElement.style.setProperty('--primary-color', c); }
-        function changeLogoShape(s) { document.documentElement.style.setProperty('--logo-shape', s); }
+            document.getElementById('editTestId').value = t.id;
+            document.getElementById('testNameInput').value = t.name;
+            document.getElementById('testCategorySelect').value = t.category;
+            document.getElementById('testNormalInput').value = t.normalValue;
+            document.getElementById('testDescriptionInput').value = t.description;
+            document.getElementById('testVideoLinksInput').value = (t.videoLinks || []).join('\n');
+            document.getElementById('uploadedVideoDataUrl').value = t.uploadedVideo || '';
+            document.getElementById('pdfDataUrlStore').value = t.pdfDataUrl || '';
+            document.getElementById('extractedPdfTextStore').value = t.pdfText || '';
+
+            if (t.uploadedVideo) document.getElementById('videoUploadStatus').innerHTML = '✅ يوجد فيديو مرفق مسبقاً';
+            if (t.pdfDataUrl) document.getElementById('pdfUploadStatus').innerHTML = '✅ يوجد PDF مرفق مسبقاً';
+
+            document.getElementById('addTestModal').classList.remove('hidden');
+        }
+function openTestDetail(id) {
+    activeTestForDetail = tests.find(item => item.id === id);
+    if (!activeTestForDetail) return;
+
+    document.getElementById('modalDetailTitle').innerText = activeTestForDetail.name;
+    switchDetailTab('info');
+    document.getElementById('testDetailModal').classList.remove('hidden');
+}
+
+function switchDetailTab(tabName) {
+    const body = document.getElementById('modalDetailBody');
+    const btns = ['Info', 'PdfOriginal', 'PdfText', 'VideoPlay', 'VideoLinks'];
+
+    btns.forEach(b => {
+        const el = document.getElementById(`tabBtn${b}`);
+        if (el) {
+            el.classList.remove('bg-primary-custom', 'text-white');
+            el.classList.add('bg-gray-100', 'dark:bg-gray-800');
+        }
+    });
+
+    const activeBtn = document.getElementById(`tabBtn${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+    if (activeBtn) {
+        activeBtn.classList.remove('bg-gray-100', 'dark:bg-gray-800');
+        activeBtn.classList.add('bg-primary-custom', 'text-white');
+    }
+
+    const t = activeTestForDetail;
+    if (tabName === 'info') {
+        let normalHtml = t.normalValue;
+        if (t.normalValue && t.normalValue.includes('|')) {
+            const rows = t.normalValue.split('|').map(r => r.trim()).filter(r => r);
+            normalHtml = `<table class="normal-range-table w-full text-xs">
+                            ${rows.map(r => `<tr><td class="font-bold text-primary-custom pl-2 py-1">${r.split(':')[0]?.trim() || ''}</td><td class="py-1">${r.split(':').slice(1).join(':')?.trim() || r}</td></tr>`).join('')}
+                        </table>`;
+        }
+        body.innerHTML = `
+                    <div class="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-xl border border-blue-200 dark:border-blue-900">
+                        <span class="font-bold text-primary-custom block mb-1">القيم الطبيعية المرجعية:</span>
+                        ${normalHtml}
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-1">الشرح النظري وطريقة الإجراء:</h4>
+                        <p class="leading-relaxed text-gray-600 dark:text-gray-300 leading-6">${t.description}</p>
+                    </div>
+                `;
+    } else if (tabName === 'pdfOriginal') {
+        body.innerHTML = t.pdfDataUrl ?
+            `<iframe src="${t.pdfDataUrl}" class="w-full h-96 rounded-xl border"></iframe>` :
+            `<div class="text-center py-8 text-gray-400">لا يوجد ملف PDF أصلي مرفق لهذا الفحص</div>`;
+    } else if (tabName === 'pdfText') {
+        body.innerHTML = t.pdfText ?
+            `<div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-xl font-mono text-[11px] whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">${t.pdfText}</div>` :
+            `<div class="text-center py-8 text-gray-400">لا يوجد نص محول مستخرج من PDF</div>`;
+    } else if (tabName === 'videoPlay') {
+        body.innerHTML = t.uploadedVideo ?
+            `<video controls class="w-full rounded-xl max-h-80"><source src="${t.uploadedVideo}"></video>` :
+            `<div class="text-center py-8 text-gray-400">لا يوجد فيديو محمل مباشرة من الجهاز</div>`;
+    } else if (tabName === 'videoLinks') {
+        body.innerHTML = (t.videoLinks && t.videoLinks.length) ?
+            `<div class="space-y-2">${t.videoLinks.map(v => `<a href="${v}" target="_blank" class="block p-2 bg-gray-50 dark:bg-gray-800 rounded-lg text-blue-500 hover:underline truncate"><i class="fa-brands fa-youtube text-red-600 ml-2"></i>${v}</a>`).join('')}</div>` :
+            `<div class="text-center py-8 text-gray-400">لا توجد روابط فيديوهات تعليمية خارجية</div>`;
+    }
+}
+
+function deleteTest(id) {
+    if (!confirm('تأكيد حذف الفحص؟')) return;
+    tests = tests.filter(t => t.id !== id);
+    localStorage.setItem('edu_tests_master', JSON.stringify(tests));
+    renderTests();
+}
+
+// Devices Functions
+function handleAddDevice(e) {
+    e.preventDefault();
+    const name = document.getElementById('devName').value;
+    const category = document.getElementById('devCategory').value;
+    const video = document.getElementById('devVideo').value;
+
+    devices.push({ id: Date.now(), name, category, video });
+    localStorage.setItem('edu_lab_devices', JSON.stringify(devices));
+    renderDevices();
+    e.target.reset();
+}
+
+function renderDevices() {
+    const container = document.getElementById('devicesListContainer');
+    container.innerHTML = '';
+    devices.forEach(d => {
+        const div = document.createElement('div');
+        div.className = 'p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl flex justify-between items-center text-xs border border-gray-200 dark:border-gray-700';
+        div.innerHTML = `
+                    <div>
+                        <span class="font-bold text-indigo-600 dark:text-indigo-400 block">${d.name}</span>
+                        <span class="text-[10px] text-gray-400">${d.category}</span>
+                    </div>
+                    ${d.video ? `<a href="${d.video}" target="_blank" class="text-red-500 font-bold"><i class="fa-brands fa-youtube text-sm"></i></a>` : ''}
+                `;
+        container.appendChild(div);
+    });
+}
+
+function closeAddTestModal() { document.getElementById('addTestModal').classList.add('hidden'); }
+function closeTestDetailModal() { document.getElementById('testDetailModal').classList.add('hidden'); }
+function openCustomizationModal() { document.getElementById('customizationModal').classList.remove('hidden'); }
+function closeCustomizationModal() { document.getElementById('customizationModal').classList.add('hidden'); }
+function openDevicesModal() { document.getElementById('devicesModal').classList.remove('hidden'); }
+function closeDevicesModal() { document.getElementById('devicesModal').classList.add('hidden'); }
+function changeFontSize(s) { document.documentElement.style.setProperty('--app-font-size', `${s}px`); }
+function changeFontFamily(f) { document.documentElement.style.setProperty('--app-font-family', f); }
+function changePrimaryColor(c) { document.documentElement.style.setProperty('--primary-color', c); }
+function changeLogoShape(s) { document.documentElement.style.setProperty('--logo-shape', s); }
         function toggleDarkMode() { document.body.classList.toggle('dark'); }
     </script>
 </body>
