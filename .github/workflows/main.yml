@@ -19,14 +19,16 @@ jobs:
           node-version: '24'
 
       - name: Install PWABuilder CLI
-        run: npm install -g @pwabuilder/cli@latest
+        run: |
+          npm install -g @pwabuilder/cli@latest
+          npm install -g pwabuilder
 
       - name: Build APK
         run: |
           mkdir -p build
           cp index.html manifest.json sw.js icon-*.png build/
           cd build
-          pwabuilder build --platform android --start-url https://muhammadelgargary-glitch.github.io/Laboratory-teacher/
+          npx pwabuilder build --platform android --start-url https://muhammadelgargary-glitch.github.io/Laboratory-teacher/
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
