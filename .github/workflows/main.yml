@@ -23,13 +23,13 @@ jobs:
 
       - name: Build APK
         run: |
-          mkdir -p dist
-          cp -r ./* dist/
-          cd dist
+          mkdir -p build
+          cp index.html manifest.json sw.js icon-*.png build/
+          cd build
           pwabuilder build --platform android --start-url https://muhammadelgargary-glitch.github.io/Laboratory-teacher/
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: dist/.pwabuilder/android/
+          path: build/.pwabuilder/android/
