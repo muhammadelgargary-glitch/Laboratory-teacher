@@ -19,17 +19,17 @@ jobs:
           node-version: '24'
 
       - name: Install PWABuilder CLI
-        run: |
-          npm install -g @pwabuilder/cli@latest
-          npm install -g pwabuilder
+        run: npm install -g @pwabuilder/cli
+
       - name: Build APK
         run: |
-          mkdir -p build
-          cp index.html manifest.json sw.js icon-*.png build/
-          cd build
-          npx pwabuilder build --platform android --start-url https://muhammadelgargary-glitch.github.io/Laboratory-teacher/
+          pwabuilder build --platform android --start-url https://muhammadelgargary-glitch.github.io/Laboratory-teacher/
+          echo "🔍 Searching for APK file..."
+          find . -name "*.apk" -type f
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: build/.pwabuilder/android/
+          path: "**/*.apk"
+          if-no-files-found: error
