@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -106,98 +104,6 @@
             });
         }
     </script>
-</head>
-    <!-- باقي الكود -->content="width=device-width, initial-scale=1.0">
-    <title>الموسوعة التعليمية للفحوصات والأجهزة الطبية</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com">
-    </script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- PDF.js Engine & Tesseract OCR Engine -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js">
-    </script>
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;600;800&family=Almarai:wght@400;700;800&family=Cairo:wght@400;600;800&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: 'var(--primary-color, #1d4ed8)',
-                        'primary-light': 'var(--primary-light, #eff6ff)',
-                        card: 'var(--card-bg, #ffffff)',
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        :root {
-            --primary-color: #1d4ed8;
-            --primary-light: #eff6ff;
-            --card-bg: #ffffff;
-            --body-bg: #f8fafc;
-            --text-color: #0f172a;
-            --app-font-family: 'Cairo', sans-serif;
-            --app-font-size: 15px;
-            --logo-shape: 12px;
-        }
-
-        body.dark {
-            --card-bg: #1e293b;
-            --body-bg: #0f172a;
-            --text-color: #f8fafc;
-        }
-
-        html,
-        body {
-            background-color: var(--body-bg);
-            color: var(--text-color);
-            font-family: var(--app-font-family);
-            font-size: var(--app-font-size);
-            transition: all 0.2s ease;
-        }
-
-        .bg-primary-custom {
-            background-color: var(--primary-color);
-        }
-        .text-primary-custom {
-            color: var(--primary-color);
-        }
-        .logo-shape-rounded {
-            border-radius: var(--logo-shape);
-        }
-        .test-card-item {
-            background-color: var(--card-bg);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            transition: all 0.2s ease;
-        }
-        .dark .test-card-item {
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-        .test-card-item:hover {
-            transform: translateY(-2px);
-        }
-
-        /* تحسين شكل الجدول */
-        .normal-range-table td {
-            padding: 4px 8px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .dark .normal-range-table td {
-            border-bottom-color: rgba(255, 255, 255, 0.05);
-        }
-    </style>
 </head>
 <body class="p-3 md:p-6 min-h-screen">
     <div class="max-w-7xl mx-auto space-y-6">
@@ -568,158 +474,241 @@
             grid.appendChild(card);
         });
     }
-    } else if (tabName === 'videoPlay') {
-    const fileId = t.uploadedVideo;
-    if (fileId && fileId.startsWith('video_')) {
-        // إذا كان معرف IndexedDB
-        const result = await getFileFromDB(fileId);
-        if (result) {
-            const url = URL.createObjectURL(result.data);
-            body.innerHTML = `<video controls class="w-full rounded-xl max-h-80"><source src="${url}"></video>`;
-        } else {
-            body.innerHTML = `<div class="text-center py-8 text-gray-400">لا يوجد فيديو مرفق</div>`;
-        }
-    } else if (fileId && fileId.startsWith('data:video/')) {
-        // إذا كان Data URL (للتوافق مع القديم)
-        body.innerHTML = `<video controls class="w-full rounded-xl max-h-80"><source src="${fileId}"></video>`;
-    } else {
-        body.innerHTML = `<div class="text-center py-8 text-gray-400">لا يوجد فيديو مرفق</div>`;
-    }
-    }
 
-    function handlePdfFileUpload(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                document.getElementById('pdfDataUrlStore').value = evt.target.result;
-                document.getElementById('pdfUploadStatus').innerHTML = '✅ تم رفع ملف PDF بنجاح';
-            };
-            reader.readAsDataURL(file);
-        }
-    }
+    // ============================================
+    // 1. فتح قاعدة البيانات (IndexedDB)
+    // ============================================
+    const DB_NAME = 'MedicalAppDB';
+    const DB_VERSION = 1;
+    let db = null;
 
-    // OCR Extractor
-    async function extractPdfTextFromForm() {
-        const fileInput = document.getElementById('testPdfFileInput');
-        const status = document.getElementById('pdfFormStatus');
-        const outputArea = document.getElementById('extractedPdfTextStore');
-
-        if (!fileInput.files[0]) {
-            alert('يرجى اختيار ملف PDF أولاً');
-            return;
-        }
-
-        status.innerText = 'جاري قراءة واستخراج ملف PDF...';
-        outputArea.value = '';
-
-        try {
-            const file = fileInput.files[0];
-            const arrayBuffer = await file.arrayBuffer();
-            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-            let fullText = '';
-            const maxPages = Math.min(pdf.numPages, 10);
-
-            for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
-                status.innerText = `قراءة الصفحة (${pageNum} من ${maxPages})...`;
-                const page = await pdf.getPage(pageNum);
-                const textContent = await page.getTextContent();
-                let pageText = textContent.items.map(item => item.str).join(' ');
-
-                if (pageText.trim().length < 10) {
-                    status.innerText = `مسح الصورة ضوئياً (OCR) للصفحة ${pageNum}...`;
-                    const viewport = page.getViewport({ scale: 1.0 });
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-
-                    await page.render({ canvasContext: ctx, viewport }).promise;
-                    const imageData = canvas.toDataURL('image/png');
-                    const ocrResult = await Tesseract.recognize(imageData, 'eng+ara');
-                    pageText = ocrResult.data.text;
+    function openDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_NAME, DB_VERSION);
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains('files')) {
+                    db.createObjectStore('files', { keyPath: 'id' });
                 }
+                if (!db.objectStoreNames.contains('tests')) {
+                    db.createObjectStore('tests', { keyPath: 'id' });
+                }
+            };
+            request.onsuccess = () => {
+                db = request.result;
+                resolve(db);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    }
 
-                fullText += `--- [صفحة ${pageNum}] ---\n` + pageText + '\n\n';
-                outputArea.value = fullText;
-            }
+    // ============================================
+    // 2. حفظ الملفات في IndexedDB
+    // ============================================
+    function saveFileToDB(fileId, fileData, mimeType) {
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(['files'], 'readwrite');
+            const store = transaction.objectStore('files');
+            const request = store.put({
+                id: fileId,
+                data: fileData,
+                mimeType: mimeType,
+                timestamp: Date.now()
+            });
+            request.onsuccess = () => resolve();
+            request.onerror = () => reject(request.error);
+        });
+    }
 
-            status.innerText = `تم تحويل النص بنجاح (${maxPages} صفحات)!`;
+    // ============================================
+    // 3. استرجاع الملفات من IndexedDB
+    // ============================================
+    function getFileFromDB(fileId) {
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(['files'], 'readonly');
+            const store = transaction.objectStore('files');
+            const request = store.get(fileId);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    // ============================================
+    // 4. تعديل دوال رفع الملفات (استخدام IndexedDB)
+    // ============================================
+    async function handleVideoFileUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        try {
+            await openDB();
+            const fileId = 'video_' + Date.now();
+            await saveFileToDB(fileId, file, file.type);
+            document.getElementById('uploadedVideoDataUrl').value = fileId;
+            document.getElementById('videoUploadStatus').innerHTML = '✅ تم رفع الفيديو بنجاح';
         } catch (err) {
             console.error(err);
-            status.innerText = 'حدث خطأ أثناء قراءة الملف.';
+            document.getElementById('videoUploadStatus').innerHTML = '❌ فشل رفع الفيديو';
         }
     }
 
-    function handleSaveTest(e) {
-        e.preventDefault();
-        const editId = document.getElementById('editTestId').value;
-        const name = document.getElementById('testNameInput').value;
-        const category = document.getElementById('testCategorySelect').value;
-        const normalValue = document.getElementById('testNormalInput').value;
-        const description = document.getElementById('testDescriptionInput').value;
-        const videoLinks = document.getElementById('testVideoLinksInput').value.split('\n').filter(u => u.trim() !== '');
-        const uploadedVideo = document.getElementById('uploadedVideoDataUrl').value;
-        const pdfDataUrl = document.getElementById('pdfDataUrlStore').value;
-        const pdfText = document.getElementById('extractedPdfTextStore').value;
+    async function handlePdfFileUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        try {
+            await openDB();
+            const fileId = 'pdf_' + Date.now();
+            await saveFileToDB(fileId, file, file.type);
+            document.getElementById('pdfDataUrlStore').value = fileId;
+            document.getElementById('pdfUploadStatus').innerHTML = '✅ تم رفع ملف PDF بنجاح';
+        } catch (err) {
+            console.error(err);
+            document.getElementById('pdfUploadStatus').innerHTML = '❌ فشل رفع PDF';
+        }
+    }
 
-        const testObj = {
-            id: editId || Date.now().toString(),
-            name,
-            category,
-            normalValue,
-            description,
-            videoLinks,
-            uploadedVideo,
-            pdfDataUrl,
-            pdfText
-        };
+    // ============================================
+    // 5. عرض الملفات في التفاصيل (من IndexedDB)
+    // ============================================
+    async function displayFile(fileId, containerId) {
+        const result = await getFileFromDB(fileId);
+        if (result) {
+            const blob = result.data;
+            const url = URL.createObjectURL(blob);
+            const container = document.getElementById(containerId);
+            if (container) {
+                if (result.mimeType.startsWith('video/')) {
+                    container.innerHTML = `<video controls class="w-full rounded-xl max-h-80"><source src="${url}"></video>`;
+                } else if (result.mimeType === 'application/pdf') {
+                    container.innerHTML = `<iframe src="${url}" class="w-full h-96 rounded-xl border"></iframe>`;
+                }
+            }
+        }
+    }
+          // OCR Extractor
+        async function extractPdfTextFromForm() {
+            const fileInput = document.getElementById('testPdfFileInput');
+            const status = document.getElementById('pdfFormStatus');
+            const outputArea = document.getElementById('extractedPdfTextStore');
 
-        if (editId) {
-            const idx = tests.findIndex(t => t.id === editId);
-            if (idx !== -1) tests[idx] = testObj;
-        } else {
-            tests.unshift(testObj);
+            if (!fileInput.files[0]) {
+                alert('يرجى اختيار ملف PDF أولاً');
+                return;
+            }
+
+            status.innerText = 'جاري قراءة واستخراج ملف PDF...';
+            outputArea.value = '';
+
+            try {
+                const file = fileInput.files[0];
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                let fullText = '';
+                const maxPages = Math.min(pdf.numPages, 10);
+
+                for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
+                    status.innerText = `قراءة الصفحة (${pageNum} من ${maxPages})...`;
+                    const page = await pdf.getPage(pageNum);
+                    const textContent = await page.getTextContent();
+                    let pageText = textContent.items.map(item => item.str).join(' ');
+
+                    if (pageText.trim().length < 10) {
+                        status.innerText = `مسح الصورة ضوئياً (OCR) للصفحة ${pageNum}...`;
+                        const viewport = page.getViewport({ scale: 1.0 });
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+
+                        await page.render({ canvasContext: ctx, viewport }).promise;
+                        const imageData = canvas.toDataURL('image/png');
+                        const ocrResult = await Tesseract.recognize(imageData, 'eng+ara');
+                        pageText = ocrResult.data.text;
+                    }
+
+                    fullText += `--- [صفحة ${pageNum}] ---\n` + pageText + '\n\n';
+                    outputArea.value = fullText;
+                }
+
+                status.innerText = `تم تحويل النص بنجاح (${maxPages} صفحات)!`;
+            } catch (err) {
+                console.error(err);
+                status.innerText = 'حدث خطأ أثناء قراءة الملف.';
+            }
         }
 
-        localStorage.setItem('edu_tests_master', JSON.stringify(tests));
-        renderTests();
-        closeAddTestModal();
-    }
+        function handleSaveTest(e) {
+            e.preventDefault();
+            const editId = document.getElementById('editTestId').value;
+            const name = document.getElementById('testNameInput').value;
+            const category = document.getElementById('testCategorySelect').value;
+            const normalValue = document.getElementById('testNormalInput').value;
+            const description = document.getElementById('testDescriptionInput').value;
+            const videoLinks = document.getElementById('testVideoLinksInput').value.split('\n').filter(u => u.trim() !== '');
+            const uploadedVideo = document.getElementById('uploadedVideoDataUrl').value;
+            const pdfDataUrl = document.getElementById('pdfDataUrlStore').value;
+            const pdfText = document.getElementById('extractedPdfTextStore').value;
 
-    function openAddTestModal() {
-        document.getElementById('editTestId').value = '';
-        document.getElementById('testNameInput').value = '';
-        document.getElementById('testNormalInput').value = '';
-        document.getElementById('testDescriptionInput').value = '';
-        document.getElementById('testVideoLinksInput').value = '';
-        document.getElementById('uploadedVideoDataUrl').value = '';
-        document.getElementById('pdfDataUrlStore').value = '';
-        document.getElementById('extractedPdfTextStore').value = '';
-        document.getElementById('videoUploadStatus').innerHTML = '';
-        document.getElementById('pdfUploadStatus').innerHTML = '';
-        document.getElementById('addTestModal').classList.remove('hidden');
-    }
+            const testObj = {
+                id: editId || Date.now().toString(),
+                name,
+                category,
+                normalValue,
+                description,
+                videoLinks,
+                uploadedVideo,
+                pdfDataUrl,
+                pdfText
+            };
 
-    function openEditTestModal(id) {
-        const t = tests.find(item => item.id === id);
-        if (!t) return;
+            if (editId) {
+                const idx = tests.findIndex(t => t.id === editId);
+                if (idx !== -1) tests[idx] = testObj;
+            } else {
+                tests.unshift(testObj);
+            }
 
-        document.getElementById('editTestId').value = t.id;
-        document.getElementById('testNameInput').value = t.name;
-        document.getElementById('testCategorySelect').value = t.category;
-        document.getElementById('testNormalInput').value = t.normalValue;
-        document.getElementById('testDescriptionInput').value = t.description;
-        document.getElementById('testVideoLinksInput').value = (t.videoLinks || []).join('\n');
-        document.getElementById('uploadedVideoDataUrl').value = t.uploadedVideo || '';
-        document.getElementById('pdfDataUrlStore').value = t.pdfDataUrl || '';
-        document.getElementById('extractedPdfTextStore').value = t.pdfText || '';
+            localStorage.setItem('edu_tests_master', JSON.stringify(tests));
+            renderTests();
+            closeAddTestModal();
+        }
 
-        if (t.uploadedVideo) document.getElementById('videoUploadStatus').innerHTML = '✅ يوجد فيديو مرفق مسبقاً';
-        if (t.pdfDataUrl) document.getElementById('pdfUploadStatus').innerHTML = '✅ يوجد PDF مرفق مسبقاً';
+        function openAddTestModal() {
+            document.getElementById('editTestId').value = '';
+            document.getElementById('testNameInput').value = '';
+            document.getElementById('testNormalInput').value = '';
+            document.getElementById('testDescriptionInput').value = '';
+            document.getElementById('testVideoLinksInput').value = '';
+            document.getElementById('uploadedVideoDataUrl').value = '';
+            document.getElementById('pdfDataUrlStore').value = '';
+            document.getElementById('extractedPdfTextStore').value = '';
+            document.getElementById('videoUploadStatus').innerHTML = '';
+            document.getElementById('pdfUploadStatus').innerHTML = '';
+            document.getElementById('addTestModal').classList.remove('hidden');
+        }
 
-        document.getElementById('addTestModal').classList.remove('hidden');
-    }        function openTestDetail(id) {
+        function openEditTestModal(id) {
+            const t = tests.find(item => item.id === id);
+            if (!t) return;
+
+            document.getElementById('editTestId').value = t.id;
+            document.getElementById('testNameInput').value = t.name;
+            document.getElementById('testCategorySelect').value = t.category;
+            document.getElementById('testNormalInput').value = t.normalValue;
+            document.getElementById('testDescriptionInput').value = t.description;
+            document.getElementById('testVideoLinksInput').value = (t.videoLinks || []).join('\n');
+            document.getElementById('uploadedVideoDataUrl').value = t.uploadedVideo || '';
+            document.getElementById('pdfDataUrlStore').value = t.pdfDataUrl || '';
+            document.getElementById('extractedPdfTextStore').value = t.pdfText || '';
+
+            if (t.uploadedVideo) document.getElementById('videoUploadStatus').innerHTML = '✅ يوجد فيديو مرفق مسبقاً';
+            if (t.pdfDataUrl) document.getElementById('pdfUploadStatus').innerHTML = '✅ يوجد PDF مرفق مسبقاً';
+
+            document.getElementById('addTestModal').classList.remove('hidden');
+        }
+
+        async function openTestDetail(id) {
             activeTestForDetail = tests.find(item => item.id === id);
             if (!activeTestForDetail) return;
 
@@ -729,99 +718,91 @@
         }
 
         async function switchDetailTab(tabName) {
-    const body = document.getElementById('modalDetailBody');
-    const btns = ['Info', 'PdfOriginal', 'PdfText', 'VideoPlay', 'VideoLinks'];
+            const body = document.getElementById('modalDetailBody');
+            const btns = ['Info', 'PdfOriginal', 'PdfText', 'VideoPlay', 'VideoLinks'];
 
-    btns.forEach(b => {
-        const el = document.getElementById(`tabBtn${b}`);
-        if (el) {
-            el.classList.remove('bg-primary-custom', 'text-white');
-            el.classList.add('bg-gray-100', 'dark:bg-gray-800');
-        }
-    });
+            btns.forEach(b => {
+                const el = document.getElementById(`tabBtn${b}`);
+                if (el) {
+                    el.classList.remove('bg-primary-custom', 'text-white');
+                    el.classList.add('bg-gray-100', 'dark:bg-gray-800');
+                }
+            });
 
-    const activeBtn = document.getElementById(`tabBtn${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
-    if (activeBtn) {
-        activeBtn.classList.remove('bg-gray-100', 'dark:bg-gray-800');
-        activeBtn.classList.add('bg-primary-custom', 'text-white');
-    }
+            const activeBtn = document.getElementById(`tabBtn${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-gray-100', 'dark:bg-gray-800');
+                activeBtn.classList.add('bg-primary-custom', 'text-white');
+            }
 
-    const t = activeTestForDetail;
-    
-    if (tabName === 'info') {
-        let normalHtml = t.normalValue;
-        if (t.normalValue && t.normalValue.includes('|')) {
-            const rows = t.normalValue.split('|').map(r => r.trim()).filter(r => r);
-            normalHtml = `<table class="normal-range-table w-full text-xs">
-                            ${rows.map(r => `<tr><td class="font-bold text-primary-custom pl-2 py-1">${r.split(':')[0]?.trim() || ''}</td><td class="py-1">${r.split(':').slice(1).join(':')?.trim() || r}</td></tr>`).join('')}
-                        </table>`;
-        }
-        body.innerHTML = `
-                    <div class="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-xl border border-blue-200 dark:border-blue-900">
-                        <span class="font-bold text-primary-custom block mb-1">القيم الطبيعية المرجعية:</span>
-                        ${normalHtml}
-                    </div>
-                    <div>
-                        <h4 class="font-bold mb-1">الشرح النظري وطريقة الإجراء:</h4>
-                        <p class="leading-relaxed text-gray-600 dark:text-gray-300 leading-6">${t.description}</p>
-                    </div>
-                `;
-                
-    } else if (tabName === 'pdfOriginal') {
-        const fileId = t.pdfDataUrl;
-        if (fileId && fileId.startsWith('pdf_')) {
-            // إذا كان معرف IndexedDB
-            try {
-                const result = await getFileFromDB(fileId);
-                if (result) {
-                    const url = URL.createObjectURL(result.data);
-                    body.innerHTML = `<iframe src="${url}" class="w-full h-96 rounded-xl border"></iframe>`;
+            const t = activeTestForDetail;
+            
+            if (tabName === 'info') {
+                let normalHtml = t.normalValue;
+                if (t.normalValue && t.normalValue.includes('|')) {
+                    const rows = t.normalValue.split('|').map(r => r.trim()).filter(r => r);
+                    normalHtml = `<table class="normal-range-table w-full text-xs">
+                                    ${rows.map(r => `<tr><td class="font-bold text-primary-custom pl-2 py-1">${r.split(':')[0]?.trim() || ''}</td><td class="py-1">${r.split(':').slice(1).join(':')?.trim() || r}</td></tr>`).join('')}
+                                </table>`;
+                }
+                body.innerHTML = `
+                            <div class="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-xl border border-blue-200 dark:border-blue-900">
+                                <span class="font-bold text-primary-custom block mb-1">القيم الطبيعية المرجعية:</span>
+                                ${normalHtml}
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1">الشرح النظري وطريقة الإجراء:</h4>
+                                <p class="leading-relaxed text-gray-600 dark:text-gray-300 leading-6">${t.description}</p>
+                            </div>
+                        `;
+            } else if (tabName === 'pdfOriginal') {
+                const fileId = t.pdfDataUrl;
+                if (fileId && fileId.startsWith('pdf_')) {
+                    try {
+                        const result = await getFileFromDB(fileId);
+                        if (result) {
+                            const url = URL.createObjectURL(result.data);
+                            body.innerHTML = `<iframe src="${url}" class="w-full h-96 rounded-xl border"></iframe>`;
+                        } else {
+                            body.innerHTML = `<div class="text-center py-8 text-gray-400">لا يوجد ملف PDF مرفق</div>`;
+                        }
+                    } catch (e) {
+                        body.innerHTML = `<div class="text-center py-8 text-gray-400">خطأ في تحميل الملف</div>`;
+                    }
+                } else if (fileId && fileId.startsWith('data:application/pdf')) {
+                    body.innerHTML = `<iframe src="${fileId}" class="w-full h-96 rounded-xl border"></iframe>`;
                 } else {
                     body.innerHTML = `<div class="text-center py-8 text-gray-400">لا يوجد ملف PDF مرفق</div>`;
                 }
-            } catch (e) {
-                body.innerHTML = `<div class="text-center py-8 text-gray-400">خطأ في تحميل الملف</div>`;
-            }
-        } else if (fileId && fileId.startsWith('data:application/pdf')) {
-            // إذا كان Data URL (للتوافق مع القديم)
-            body.innerHTML = `<iframe src="${fileId}" class="w-full h-96 rounded-xl border"></iframe>`;
-        } else {
-            body.innerHTML = `<div class="text-center py-8 text-gray-400">لا يوجد ملف PDF مرفق</div>`;
-        }
-        
-    } else if (tabName === 'pdfText') {
-        body.innerHTML = t.pdfText ?
-            `<div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-xl font-mono text-[11px] whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">${t.pdfText}</div>` :
-            `<div class="text-center py-8 text-gray-400">لا يوجد نص محول مستخرج من PDF</div>`;
-            
-    } else if (tabName === 'videoPlay') {
-        const fileId = t.uploadedVideo;
-        if (fileId && fileId.startsWith('video_')) {
-            // إذا كان معرف IndexedDB
-            try {
-                const result = await getFileFromDB(fileId);
-                if (result) {
-                    const url = URL.createObjectURL(result.data);
-                    body.innerHTML = `<video controls class="w-full rounded-xl max-h-80"><source src="${url}"></video>`;
+            } else if (tabName === 'pdfText') {
+                body.innerHTML = t.pdfText ?
+                    `<div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-xl font-mono text-[11px] whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">${t.pdfText}</div>` :
+                    `<div class="text-center py-8 text-gray-400">لا يوجد نص محول مستخرج من PDF</div>`;
+            } else if (tabName === 'videoPlay') {
+                const fileId = t.uploadedVideo;
+                if (fileId && fileId.startsWith('video_')) {
+                    try {
+                        const result = await getFileFromDB(fileId);
+                        if (result) {
+                            const url = URL.createObjectURL(result.data);
+                            body.innerHTML = `<video controls class="w-full rounded-xl max-h-80"><source src="${url}"></video>`;
+                        } else {
+                            body.innerHTML = `<div class="text-center py-8 text-gray-400">لا يوجد فيديو مرفق</div>`;
+                        }
+                    } catch (e) {
+                        body.innerHTML = `<div class="text-center py-8 text-gray-400">خطأ في تحميل الفيديو</div>`;
+                    }
+                } else if (fileId && fileId.startsWith('data:video/')) {
+                    body.innerHTML = `<video controls class="w-full rounded-xl max-h-80"><source src="${fileId}"></video>`;
                 } else {
                     body.innerHTML = `<div class="text-center py-8 text-gray-400">لا يوجد فيديو مرفق</div>`;
                 }
-            } catch (e) {
-                body.innerHTML = `<div class="text-center py-8 text-gray-400">خطأ في تحميل الفيديو</div>`;
+            } else if (tabName === 'videoLinks') {
+                body.innerHTML = (t.videoLinks && t.videoLinks.length) ?
+                    `<div class="space-y-2">${t.videoLinks.map(v => `<a href="${v}" target="_blank" class="block p-2 bg-gray-50 dark:bg-gray-800 rounded-lg text-blue-500 hover:underline truncate"><i class="fa-brands fa-youtube text-red-600 ml-2"></i>${v}</a>`).join('')}</div>` :
+                    `<div class="text-center py-8 text-gray-400">لا توجد روابط فيديوهات تعليمية خارجية</div>`;
             }
-        } else if (fileId && fileId.startsWith('data:video/')) {
-            // إذا كان Data URL (للتوافق مع القديم)
-            body.innerHTML = `<video controls class="w-full rounded-xl max-h-80"><source src="${fileId}"></video>`;
-        } else {
-            body.innerHTML = `<div class="text-center py-8 text-gray-400">لا يوجد فيديو مرفق</div>`;
         }
-        
-    } else if (tabName === 'videoLinks') {
-        body.innerHTML = (t.videoLinks && t.videoLinks.length) ?
-            `<div class="space-y-2">${t.videoLinks.map(v => `<a href="${v}" target="_blank" class="block p-2 bg-gray-50 dark:bg-gray-800 rounded-lg text-blue-500 hover:underline truncate"><i class="fa-brands fa-youtube text-red-600 ml-2"></i>${v}</a>`).join('')}</div>` :
-            `<div class="text-center py-8 text-gray-400">لا توجد روابط فيديوهات تعليمية خارجية</div>`;
-    }
-}
 
         function deleteTest(id) {
             if (!confirm('تأكيد حذف الفحص؟')) return;
@@ -871,117 +852,6 @@
         function changePrimaryColor(c) { document.documentElement.style.setProperty('--primary-color', c); }
         function changeLogoShape(s) { document.documentElement.style.setProperty('--logo-shape', s); }
         function toggleDarkMode() { document.body.classList.toggle('dark'); }
-    // ============================================
-// 1. فتح قاعدة البيانات (IndexedDB)
-// ============================================
-const DB_NAME = 'MedicalAppDB';
-const DB_VERSION = 1;
-let db = null;
-
-function openDB() {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, DB_VERSION);
-        request.onupgradeneeded = (event) => {
-            const db = event.target.result;
-            if (!db.objectStoreNames.contains('files')) {
-                db.createObjectStore('files', { keyPath: 'id' });
-            }
-            if (!db.objectStoreNames.contains('tests')) {
-                db.createObjectStore('tests', { keyPath: 'id' });
-            }
-        };
-        request.onsuccess = () => {
-            db = request.result;
-            resolve(db);
-        };
-        request.onerror = () => reject(request.error);
-    });
-}
-
-// ============================================
-// 2. حفظ الملفات في IndexedDB
-// ============================================
-function saveFileToDB(fileId, fileData, mimeType) {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction(['files'], 'readwrite');
-        const store = transaction.objectStore('files');
-        const request = store.put({
-            id: fileId,
-            data: fileData,
-            mimeType: mimeType,
-            timestamp: Date.now()
-        });
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
-    });
-}
-
-// ============================================
-// 3. استرجاع الملفات من IndexedDB
-// ============================================
-function getFileFromDB(fileId) {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction(['files'], 'readonly');
-        const store = transaction.objectStore('files');
-        const request = store.get(fileId);
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-    });
-}
-
-// ============================================
-// 4. تعديل دوال رفع الملفات (استخدام IndexedDB)
-// ============================================
-async function handleVideoFileUpload(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    
-    try {
-        await openDB();
-        const fileId = 'video_' + Date.now();
-        await saveFileToDB(fileId, file, file.type);
-        document.getElementById('uploadedVideoDataUrl').value = fileId;
-        document.getElementById('videoUploadStatus').innerHTML = '✅ تم رفع الفيديو بنجاح';
-    } catch (err) {
-        console.error(err);
-        document.getElementById('videoUploadStatus').innerHTML = '❌ فشل رفع الفيديو';
-    }
-}
-
-async function handlePdfFileUpload(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    
-    try {
-        await openDB();
-        const fileId = 'pdf_' + Date.now();
-        await saveFileToDB(fileId, file, file.type);
-        document.getElementById('pdfDataUrlStore').value = fileId;
-        document.getElementById('pdfUploadStatus').innerHTML = '✅ تم رفع ملف PDF بنجاح';
-    } catch (err) {
-        console.error(err);
-        document.getElementById('pdfUploadStatus').innerHTML = '❌ فشل رفع PDF';
-    }
-}
-
-// ============================================
-// 5. عرض الملفات في التفاصيل (من IndexedDB)
-// ============================================
-async function displayFile(fileId, containerId) {
-    const result = await getFileFromDB(fileId);
-    if (result) {
-        const blob = result.data;
-        const url = URL.createObjectURL(blob);
-        const container = document.getElementById(containerId);
-        if (container) {
-            if (result.mimeType.startsWith('video/')) {
-                container.innerHTML = `<video controls class="w-full rounded-xl max-h-80"><source src="${url}"></video>`;
-            } else if (result.mimeType === 'application/pdf') {
-                container.innerHTML = `<iframe src="${url}" class="w-full h-96 rounded-xl border"></iframe>`;
-            }
-        }
-    }
-}
-</script>
+    </script>
 </body>
 </html>
