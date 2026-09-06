@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1d4ed8">
+    <meta name="description" content="مرجعك الشامل لشرح التحاليل المخبرية والأجهزة الطبية">
+    
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+    
+    <title>الموسوعة التعليمية للفحوصات والأجهزة الطبية</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;600;800&family=Almarai:wght@400;700;800&family=Cairo:wght@400;600;800&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: 'var(--primary-color, #1d4ed8)',
+                        'primary-light': 'var(--primary-light, #eff6ff)',
+                        card: 'var(--card-bg, #ffffff)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #1d4ed8;
+            --primary-light: #eff6ff;
+            --card-bg: #ffffff;
+            --body-bg: #f8fafc;
+            --text-color: #0f172a;
+            --app-font-family: 'Cairo', sans-serif;
+            --app-font-size: 15px;
+            --logo-shape: 12px;
+        }
+
+        body.dark {
+            --card-bg: #1e293b;
+            --body-bg: #0f172a;
+            --text-color: #f8fafc;
+        }
+
+        html, body {
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            font-family: var(--app-font-family);
+            font-size: var(--app-font-size);
+            transition: all 0.2s ease;
+        }
+
+        .bg-primary-custom {
+            background-color: var(--primary-color);
+        }
+        
+        .text-primary-custom {
+            color: var(--primary-color);
+        }
+        
+        .logo-shape-rounded {
+            border-radius: var(--logo-shape);
+        }
+        
+        .test-card-item {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
+        }
+        
+        .dark .test-card-item {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .test-card-item:hover {
+            box-shadow: 0 10px 30px rgba(29, 78, 216, 0.15);
+            transform: translateY(-2px);
+        }
+    </style>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js', {
+                    scope: './'
+                }).then(registration => {
+                    console.log('✅ Service Worker registered');
+                }).catch(error => {
+                    console.warn('⚠️ Service Worker error:', error);
+                });
+            });
+        }
+    </script>
+</head>
+<body class="p-3 md:p-6 min-h-screen">
+    <div class="max-w-7xl mx-auto space-y-6">
+        <!-- Header Section -->
+        <header class="bg-card rounded-2xl p-4 md:p-6 shadow-sm border border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4 w-full md:w-auto">
+                <div id="logoContainer" class="w-14 h-14 bg-primary-custom logo-shape-rounded text-white flex items-center justify-center font-bold text-2xl shadow-lg transition-all">
+                    <i id="logoIcon" class="fa-solid fa-flask-vial"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg md:text-2xl text-gray-800 dark:text-white">الموسوعة التعليمية للفحوصات والأجهزة الطبية</h1>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">مرجعك الشامل لشرح التحاليل المخبرية، عرض PDF المباشر والنصي، والأجهزة الطبية</p>
+                </div>
+            </div>
+
+            <!-- Global Actions & Tools -->
+            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
+                <button onclick="openCustomizationModal()" class="px-3 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-primary-custom"></i>
+                    <span>تخصيص المظهر</span>
+                </button>
+                <button onclick="openDevicesModal()" class="px-3 py-2 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 rounded-xl text-xs font-bold transition flex items-center gap-2 border border-indigo-200 dark:border-indigo-800">
+                    <i class="fa-solid fa-microscope"></i>
+                    <span>دليل الأجهزة الطبية</span>
+                </button>
+                <button onclick="toggleDarkMode()" class="p-2.5 bg-gray-100 dark:bg-gray-800 rounded-xl text-xs hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:inline text-amber-400"></i>
+                </button>
+            </div>
+        </header>
+            <!-- Main Content Area -->
+    <main class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Sidebar Navigation -->
+        <div class="lg:col-span-1 space-y-4">
+            <div class="bg-card rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800 space-y-3">
+                <h2 class="font-bold text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-primary-custom"></i>
+                    بحث وتصفية الفحوصات
+                </h2>
+                <input type="text" id="globalSearchInput" oninput="renderTests()" placeholder="ابحث باسم الفحص أو الشرح..." class="w-full px-3 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent text-xs focus:ring-2 focus:ring-primary-custom outline-none">
+
+                <hr class="dark:border-gray-700">
+
+                <h3 class="font-bold text-xs text-gray-500 dark:text-gray-400">الأقسام المخبرية</h3>
+                <div id="categoriesList" class="space-y-1"></div>
+            </div>
+        </div>
+
+        <!-- Main Content Display -->
+        <div class="lg:col-span-3 space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 id="activeCategoryTitle" class="font-extrabold text-lg text-gray-800 dark:text-white">جميع الفحوصات الطبية</h2>
+                <button onclick="openAddTestModal()" class="px-3 py-1.5 bg-primary-custom text-white text-xs font-bold rounded-xl hover:opacity-90 transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-plus"></i> إضافة فحص جديد
+                </button>
+            </div>
+
+            <div id="testsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+    </main>
+    </div>
+    <!-- Add / Edit Test Modal -->
+<div id="addTestModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 md:p-4">
+    <div class="bg-card w-full max-w-2xl rounded-2xl p-4 md:p-6 space-y-4 shadow-2xl border border-gray-200 dark:border-gray-800 max-h-[92vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b pb-3 dark:border-gray-700">
+            <h3 id="modalFormTitle" class="font-bold text-base text-primary-custom flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square"></i> إضافة / تعديل فحص طبي
+            </h3>
+            <button onclick="closeAddTestModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+
+        <form onsubmit="handleSaveTest(event)" class="space-y-3 text-xs">
+            <input type="hidden" id="editTestId">
+            <input type="hidden" id="pdfDataUrlStore">
+            <input type="hidden" id="uploadedVideoDataUrl">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="block font-bold mb-1">اسم الفحص</label>
+                    <input type="text" id="testNameInput" required placeholder="مثال: Fasting Blood Sugar (FBS)" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent">
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">القسم الطبي</label>
+                    <select id="testCategorySelect" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent"></select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-bold mb-1">القيم الطبيعية المرجعية (Normal Range)</label>
+                <input type="text" id="testNormalInput" placeholder="مثال: Hb: 12-17 g/dL | WBC: 4k-11k | PLT: 150k-450k" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent">
+                <span class="text-[10px] text-gray-400">افصل بين كل قيمة ووحدة باستخدام علامة | لعرضها كجدول</span>
+            </div>
+
+            <div>
+                <label class="block font-bold mb-1">الشرح النظري وطريقة الإجراء</label>
+                <textarea id="testDescriptionInput" rows="3" placeholder="أدخل الشرح الطبي التفصيلي هنا..." class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent"></textarea>
+            </div>
+
+            <!-- Video Attachments -->
+            <div class="p-3 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-200 dark:border-red-900/40 space-y-2">
+                <label class="block font-bold text-red-600 flex items-center gap-1"><i class="fa-brands fa-youtube"></i> روابط الفيديوهات التعليمية (رابط في كل سطر)</label>
+                <textarea id="testVideoLinksInput" rows="2" placeholder="ضع رابط فيديو في كل سطر..." class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent"></textarea>
+
+                <div class="space-y-1">
+                    <span class="block font-semibold">أو رفع فيديو من الجهاز:</span>
+                    <input type="file" id="testVideoFileInput" accept="video/*" onchange="handleVideoFileUpload(event)" class="w-full text-xs">
+                    <div id="videoUploadStatus" class="text-[10px] text-emerald-600"></div>
+                </div>
+            </div>
+
+            <!-- PDF File Upload & OCR Engine -->
+            <div class="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-xl border border-blue-200 dark:border-blue-900/40 space-y-3">
+                <label class="block font-bold text-primary-custom flex items-center gap-1"><i class="fa-solid fa-file-pdf"></i> إرفاق ملف PDF وتحويله إلى نص (OCR)</label>
+                <input type="file" id="testPdfFileInput" accept="application/pdf" onchange="handlePdfFileUpload(event)" class="w-full text-xs bg-white dark:bg-gray-800 p-1.5 rounded-lg border">
+                <div id="pdfUploadStatus" class="text-[10px] text-indigo-600"></div>
+
+                <div class="flex flex-col gap-2">
+                    <button type="button" onclick="extractPdfTextFromForm()" class="w-full py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition flex items-center justify-center gap-2 shadow">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> استخراج النص تلقائياً (OCR)
+                    </button>
+                    <span id="pdfFormStatus" class="text-[11px] font-semibold text-indigo-700 dark:text-indigo-300 text-center block"></span>
+                </div>
+
+                <textarea id="extractedPdfTextStore" rows="3" placeholder="سيتم استخراج النصوص المقروءة والمصورة من PDF وإدراجها هنا..." class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-[11px] font-mono leading-relaxed"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-2.5 bg-primary-custom text-white font-bold rounded-xl hover:opacity-90 transition shadow-lg">+ حفظ التغييرات</button>
+        </form>
+    </div>
+</div>
+<!-- Modal: Test Details & Content Viewer -->
+<div id="testDetailModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 md:p-4">
+    <div class="bg-card w-full max-w-3xl rounded-2xl p-4 md:p-6 space-y-4 shadow-2xl border border-gray-200 dark:border-gray-800 max-h-[92vh] flex flex-col">
+        <div class="flex items-center justify-between border-b pb-3 dark:border-gray-700">
+            <h3 id="modalDetailTitle" class="font-extrabold text-base md:text-lg text-primary-custom flex items-center gap-2"></h3>
+            <button onclick="closeTestDetailModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+
+        <!-- Content Options Bar -->
+        <div class="flex flex-wrap gap-2 border-b pb-3 dark:border-gray-700 text-xs">
+            <button onclick="switchDetailTab('info')" id="tabBtnInfo" class="px-3 py-1.5 rounded-xl font-bold bg-primary-custom text-white flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-info"></i> معلومات الفحص
+            </button>
+            <button onclick="switchDetailTab('pdfOriginal')" id="tabBtnPdfOriginal" class="px-3 py-1.5 rounded-xl font-bold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-file-pdf text-red-500"></i> فتح PDF الأصلي
+            </button>
+            <button onclick="switchDetailTab('pdfText')" id="tabBtnPdfText" class="px-3 py-1.5 rounded-xl font-bold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-file-lines text-indigo-500"></i> PDF المترجم لنص (OCR)
+            </button>
+            <button onclick="switchDetailTab('videoPlay')" id="tabBtnVideoPlay" class="px-3 py-1.5 rounded-xl font-bold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-play text-emerald-500"></i> تشغيل الفيديو المرفق
+            </button>
+            <button onclick="switchDetailTab('videoLinks')" id="tabBtnVideoLinks" class="px-3 py-1.5 rounded-xl font-bold bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-link text-blue-500"></i> روابط الفيديوهات
+            </button>
+        </div>
+
+        <!-- Dynamic Tab Content Body -->
+        <div id="modalDetailBody" class="flex-1 overflow-y-auto space-y-4 text-xs pr-1"></div>
+    </div>
+</div>
+
+<!-- Modal: Devices Guide -->
+<div id="devicesModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-card w-full max-w-2xl rounded-2xl p-6 space-y-4 shadow-2xl border border-gray-200 dark:border-gray-800 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b pb-3 dark:border-gray-700">
+            <h3 class="font-bold text-base flex items-center gap-2">
+                <i class="fa-solid fa-microscope text-indigo-600"></i> دليل أجهزة ومعدات المختبر
+            </h3>
+            <button onclick="closeDevicesModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+
+        <form onsubmit="handleAddDevice(event)" class="bg-gray-50 dark:bg-gray-800/50 p-3 rounded-xl border border-gray-200 dark:border-gray-700 space-y-2 text-xs">
+            <h4 class="font-bold text-indigo-600 dark:text-indigo-400">إضافة جهاز مخبري جديد</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <input type="text" id="devName" placeholder="اسم الجهاز (مثل: Mindray BC-5000)" required class="p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent">
+                <input type="text" id="devCategory" placeholder="القسم (Hematology, Chemistry...)" required class="p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent">
+            </div>
+            <input type="url" id="devVideo" placeholder="رابط فيديو شرح الجهاز (Youtube)" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent">
+            <button type="submit" class="w-full py-1.5 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition">+ حفظ الجهاز</button>
+        </form>
+
+        <div id="devicesListContainer" class="space-y-2 max-h-60 overflow-y-auto"></div>
+    </div>
+</div>
+
+<!-- Customization Settings Modal -->
+<div id="customizationModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-card w-full max-w-md rounded-2xl p-6 space-y-4 shadow-2xl border border-gray-200 dark:border-gray-800">
+        <div class="flex items-center justify-between border-b pb-3 dark:border-gray-700">
+            <h3 class="font-bold text-base text-primary-custom"><i class="fa-solid fa-palette"></i> تخصيص الواجهة والخط</h3>
+            <button onclick="closeCustomizationModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+
+        <div class="space-y-3 text-xs">
+            <div>
+                <label class="block font-bold mb-1">اللون الرئيسي للبرنامج</label>
+                <div class="flex gap-2">
+                    <button onclick="changePrimaryColor('#1d4ed8')" class="w-7 h-7 rounded-full bg-blue-700"></button>
+                    <button onclick="changePrimaryColor('#059669')" class="w-7 h-7 rounded-full bg-emerald-600"></button>
+                    <button onclick="changePrimaryColor('#7c3aed')" class="w-7 h-7 rounded-full bg-purple-600"></button>
+                    <button onclick="changePrimaryColor('#ea580c')" class="w-7 h-7 rounded-full bg-orange-600"></button>
+                    <button onclick="changePrimaryColor('#dc2626')" class="w-7 h-7 rounded-full bg-red-600"></button>
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-bold mb-1">نوع الخط العربي</label>
+                <select id="fontFamilySelect" onchange="changeFontFamily(this.value)" class="w-full p-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent">
+                    <option value="'Cairo', sans-serif">Cairo</option>
+                    <option value="'Tajawal', sans-serif">Tajawal</option>
+                    <option value="'Almarai', sans-serif">Almarai</option>
+                    <option value="'Alexandria', sans-serif">Alexandria</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block font-bold mb-1">حجم الخط الإجمالي</label>
+                <input type="range" min="12" max="20" value="15" id="fontSizeSlider" oninput="changeFontSize(this.value)" class="w-full accent-blue-600">
+            </div>
+
+            <div>
+                                container.appendChild(div);
+            });
+        }
+
+        function closeAddTestModal() { document.getElementById('addTestModal').classList.add('hidden'); }
+        function closeTestDetailModal() { document.getElementById('testDetailModal').classList.add('hidden'); }
+        function openCustomizationModal() { document.getElementById('customizationModal').classList.remove('hidden'); }
+        function closeCustomizationModal() { document.getElementById('customizationModal').classList.add('hidden'); }
+        function openDevicesModal() { document.getElementById('devicesModal').classList.remove('hidden'); }
+        function closeDevicesModal() { document.getElementById('devicesModal').classList.add('hidden'); }
+        function changeFontSize(s) { document.documentElement.style.setProperty('--app-font-size', `${s}px`); }
+        function changeFontFamily(f) { document.documentElement.style.setProperty('--app-font-family', f); }
+        function changePrimaryColor(c) { document.documentElement.style.setProperty('--primary-color', c); }
+        function changeLogoShape(s) { document.documentElement.style.setProperty('--logo-shape', s); }
+        function toggleDarkMode() { document.body.classList.toggle('dark'); }
+    </script>
+</body>
+</htm
