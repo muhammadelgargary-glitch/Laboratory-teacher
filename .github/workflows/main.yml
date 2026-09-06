@@ -23,7 +23,7 @@ jobs:
           mkdir -p build
           cp index.html manifest.json sw.js icon-192.png build/ 2>/dev/null || true
           cd build
-          npx @pwabuilder/pwabuilder-android@latest --name "LabApp" --manifest ./manifest.json --start_url ./index.html
+          npx @pwabuilder/cli package --manifest ./manifest.json --name "LabApp" --platform android
           
       - name: Upload APK
         uses: actions/upload-artifact@v4
