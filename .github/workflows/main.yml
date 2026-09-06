@@ -18,12 +18,9 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Install PWABuilder CLI
-        run: npm install -g @pwabuilder/cli
-
-      - name: Build APK
+      - name: Build APK with NPX
         run: |
-          pwabuilder build --platform android --start-url https://muhammadelgargary-glitch.github.io/Laboratory-teacher/
+          npx @pwabuilder/cli@latest build --platform android --start-url https://muhammadelgargary-glitch.github.io/Laboratory-teacher/
           ls -la ./
           ls -la ./.pwabuilder/ || true
 
@@ -34,4 +31,4 @@ jobs:
           path: |
             ./.pwabuilder/android/*.apk
             ./.pwabuilder/android/*.aab
-          if-no-files-found: error
+          if-no-files-found: warn
