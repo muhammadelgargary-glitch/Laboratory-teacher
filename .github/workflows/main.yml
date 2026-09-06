@@ -1,4 +1,4 @@
-name: Build APK using WebIntoApp
+name: Build APK
 
 on:
   push:
@@ -13,22 +13,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download WebIntoApp CLI
-        run: |
-          wget -O webintoapp https://github.com/webintoapp/webintoapp/releases/latest/download/webintoapp-linux
-          chmod +x webintoapp
-          file webintoapp
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
 
+      - name: Install PWABuilder CLI
+        run: |
+          npm install -g @pwabuilder/cli@latest
+          npm install -g pwabuilder
       - name: Build APK
         run: |
-          ./webintoapp build \
-            --url https://muhammadelgargary-glitch.github.io/Laboratory-teacher/ \
-            --name "الموسوعة الطبية" \
-            --package "com.lab.medical" \
-            --output app.apk
-
+          mkdir -p build
+          cp index.html manifest.json sw.js icon-*.png build/
+          cd build
+          npx pwabuilder build --platform android --start-url https://muhammadelgargary-glitch.github.io/Laboratory-teacher/
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: app.apk
+          path: build/.pwabuilder/android/
