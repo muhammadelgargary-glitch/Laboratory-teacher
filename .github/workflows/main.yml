@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
 
       - name: Install PWABuilder CLI
         run: npm install -g @pwabuilder/cli
@@ -24,12 +24,12 @@ jobs:
       - name: Build APK
         run: |
           mkdir -p build
-          cp index.html manifest.json sw.js icon-192.png build/ 2>/dev/null || true
+          cp index.html manifest.json sw.js icon-*.png build/
           cd build
-          npx @pwabuilder/cli package --manifest ./manifest.json --name "LabApp" --platform android
+          pwabuilder build --platform android --start-url https://muhammadelgargary-glitch.github.io/Laboratory-teacher/
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: build/android/
+          path: build/.pwabuilder/android/
