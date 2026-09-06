@@ -15,8 +15,9 @@ jobs:
 
       - name: Download WebIntoApp CLI
         run: |
-          curl -L -o webintoapp https://github.com/webintoapp/webintoapp/releases/latest/download/webintoapp-linux
+          wget -O webintoapp https://github.com/webintoapp/webintoapp/releases/latest/download/webintoapp-linux
           chmod +x webintoapp
+          file webintoapp
 
       - name: Build APK
         run: |
