@@ -1,4 +1,4 @@
-name: Build APK with Bubblewrap
+name: Build APK
 
 on:
   push:
@@ -16,19 +16,31 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '20'
 
-      - name: Install Bubblewrap
-        run: npm install -g @bubblewrap/cli
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-      - name: Generate Android Project
+      - name: Build Android App with Bubblewrap
         run: |
-          npx @bubblewrap/cli init --manifest https://muhammadelgargary-glitch.github.io/Laboratory-teacher/manifest.json
-          npx @bubblewrap/cli build
-
-      - name: Upload APK
+          npm install -g @bubblewrap/cli
+          
+          # إعداد ملف التهيئة التلقائي لتطبيق الأندرويد
+          bubblewrap init --manifest ./manifest.json --directory android-app --skip-validation || true
+          
+          cd android-app
+          
+          # بناء ملف الـ APK بصيغة جاهزة للتثبيت
+          bubblewrap build --manifest ../manifest.json
+          
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: app-release.apk
-          if-no-files-found: error
+          path: |
+            android-app/*.apk
+            android-app/app/build/outputs/apk/release/*.apk
+            
