@@ -23,14 +23,13 @@ jobs:
 
       - name: Build APK
         run: |
+          mkdir -p build
+          cp index.html manifest.json sw.js icon-*.png build/
+          cd build
           pwabuilder build --platform android --start-url https://muhammadelgargary-glitch.github.io/Laboratory-teacher/
-          echo "Listing files to debug path:"
-          ls -la ./.pwabuilder/ || echo "No .pwabuilder directory found"
-          ls -la ./.pwabuilder/android/ || echo "No android directory found"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: ./.pwabuilder/android/
-          if-no-files-found: error
+          path: build/.pwabuilder/android/
