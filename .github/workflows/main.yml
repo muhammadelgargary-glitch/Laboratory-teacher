@@ -18,17 +18,19 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Build APK with NPX
+      - name: Install PWABuilder CLI
+        run: npm install -g @pwabuilder/cli
+
+      - name: Build APK
         run: |
-          npx @pwabuilder/cli@latest build --platform android --start-url https://muhammadelgargary-glitch.github.io/Laboratory-teacher/
-          ls -la ./
-          ls -la ./.pwabuilder/ || true
+          pwabuilder build --platform android --start-url https://muhammadelgargary-glitch.github.io/Laboratory-teacher/
+          echo "Listing files to debug path:"
+          ls -la ./.pwabuilder/ || echo "No .pwabuilder directory found"
+          ls -la ./.pwabuilder/android/ || echo "No android directory found"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: |
-            ./.pwabuilder/android/*.apk
-            ./.pwabuilder/android/*.aab
-          if-no-files-found: warn
+          path: ./.pwabuilder/android/
+          if-no-files-found: error
