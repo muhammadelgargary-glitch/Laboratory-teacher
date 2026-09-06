@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK with Bubblewrap
 
 on:
   push:
@@ -18,18 +18,17 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Install PWABuilder CLI
-        run: npm install -g @pwabuilder/cli
+      - name: Install Bubblewrap
+        run: npm install -g @bubblewrap/cli
 
-      - name: Build APK
+      - name: Generate Android Project
         run: |
-          pwabuilder build --platform android --start-url https://muhammadelgargary-glitch.github.io/Laboratory-teacher/
-          echo "🔍 Searching for APK file..."
-          find . -name "*.apk" -type f
+          npx @bubblewrap/cli init --manifest https://muhammadelgargary-glitch.github.io/Laboratory-teacher/manifest.json
+          npx @bubblewrap/cli build
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: "**/*.apk"
+          path: app-release.apk
           if-no-files-found: error
